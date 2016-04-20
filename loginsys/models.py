@@ -12,7 +12,7 @@ class MyUserManager(BaseUserManager):
 
         user = self.model(
             email=self.normalize_email(email),
-            house_number=house_number,
+            house_number=self.house_number
         )
 
         user.set_password(password)
@@ -22,11 +22,11 @@ class MyUserManager(BaseUserManager):
     def create_superuser(self, email, house_number, password):
         """
         Creates and saves a superuser with the given email, date of
-        birth and password.
+        birth and password.c
         """
         user = self.create_user(email,
-            password=password,
-            house_number=house_number
+            password=self.password,
+            house_number=self.house_number,
         )
         user.is_admin = True
         user.save(using=self._db)
@@ -39,7 +39,7 @@ class MyUser(AbstractBaseUser):
         max_length=255,
         unique=True,
     )
-    house_number = models.IntegerField()
+    house_number = models.IntegerField(default=0)
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
 
