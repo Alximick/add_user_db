@@ -18,9 +18,19 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.conf import settings
 
+
+
+def home(request):
+    ''' Заглушка '''
+    from django.shortcuts import render_to_response
+    from django.contrib import auth
+    return render_to_response('main.html', {'username': auth.get_user(request).username})
+
+
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^auth/', include('loginsys.urls')),
+    url(r'^$', home)
     # url(r'^search/', include('search.urls')),
     # url(r'^', include('notes.urls')),
 ]

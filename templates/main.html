@@ -5,6 +5,10 @@
     <title>Title</title>
 </head>
 <body>
-
+ {% if not username %}
+          <a href="{% url 'login' %}">Вход</a>
+            {% else %}
+          <a href="{% url 'logout' %}">Выход</a>
+            {% endif %}
 </body>
 </html>
