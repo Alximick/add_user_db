@@ -3,10 +3,11 @@ import xlrd
 import sys
 from loginsys.admin import UserCreationForm
 
+
 def parser_lot(filename):
     lots = []
     read_book = xlrd.open_workbook(filename, on_demand=True, encoding_override="utf-8")
-    sheet = read_book.sheet_by_index(0) # First page
+    sheet = read_book.sheet_by_index(0)
 
     i = 1
     for rownum in range(sheet.nrows):
@@ -19,25 +20,25 @@ def parser_lot(filename):
             pass
     return lots
 
+
 def add_user_db(filename):
     users = parser_lot(filename)
     error = 0
 
     for user in users:
-        # print(type(str('2')), type('@test.ru'))
-        email = str(user) + '@test.ru'
+        username = str(user)
         house_number = user
-        password = 'qwerty123'
+        password = 'qwerty' + str(user)
         try:
             form = UserCreationForm({
-                'email': email,
+                'username': username,
                 'house_number': house_number,
                 'password1': password,
                 'password2': password,
             })
             form.is_valid()
             comment = form.save()
-            print('add user', comment.email)
+            print('add user', comment.username)
         except Exception as E:
             error += 1
             print(E)
@@ -47,7 +48,15 @@ def add_user_db(filename):
 if __name__ == '__main__':
 
     if len(sys.argv) != 2:
-        print ('usage: ./parser_lot.py file')
+        print ('usage: ./create_users.py file')
+        print(''' or 
+
+./manager.py shell
+»> from create_users import add_user_db
+»> filename = '1.xlsx'
+»> test = add_user_db(filename)
+
+            ''')
         sys.exit(1)
 
     print(parser_lot(sys.argv[1]))

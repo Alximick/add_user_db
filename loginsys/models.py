@@ -1,32 +1,33 @@
 from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
+from django.core import validators
 from django.db import models
 
 class MyUserManager(BaseUserManager):
-    def create_user(self, email, house_number, password=None):
+    def create_user(self, username, house_number, password=None):
         """
         Creates and saves a User with the given email, date of
         birth and password.
         """
-        if not email:
-            raise ValueError('Users must have an email address')
+        if not username:
+            raise ValueError('Users must have an username')
 
         user = self.model(
-            email=self.normalize_email(email),
-            house_number=self.house_number
+            username=self.normalize_email(username),
+            house_number=house_number,
         )
 
         user.set_password(password)
         user.save(using=self._db)
         return user
 
-    def create_superuser(self, email, house_number, password):
+    def create_superuser(self, username, house_number, password):
         """
         Creates and saves a superuser with the given email, date of
         birth and password.c
         """
-        user = self.create_user(email,
-            password=self.password,
-            house_number=self.house_number,
+        user = self.create_user(username,
+            password=password,
+            house_number=house_number,
         )
         user.is_admin = True
         user.save(using=self._db)
@@ -34,10 +35,22 @@ class MyUserManager(BaseUserManager):
 
 
 class MyUser(AbstractBaseUser):
-    email = models.EmailField(
-        verbose_name='email address',
-        max_length=255,
+    username = models.CharField(
+        ('username'),
+        max_length=30,
         unique=True,
+        help_text=(
+            'Required. 30 characters or fewer. Letters, digits and @/./+/-/_ only.'),
+        validators=[
+            validators.RegexValidator(
+                r'^[\w.@+-]+$',
+                ('Enter a valid username. This value may contain only '
+                 'letters, numbers ' 'and @/./+/-/_ characters.')
+            ),
+        ],
+        error_messages={
+            'unique': ("A user with that username already exists."),
+        },
     )
     house_number = models.IntegerField(default=0)
     is_active = models.BooleanField(default=True)
@@ -45,19 +58,17 @@ class MyUser(AbstractBaseUser):
 
     objects = MyUserManager()
 
-    USERNAME_FIELD = 'email'
+    USERNAME_FIELD = 'username'
     REQUIRED_FIELDS = ['house_number']
 
     def get_full_name(self):
-        # The user is identified by their email address
-        return self.email
+        return self.username
 
     def get_short_name(self):
-        # The user is identified by their email address
-        return self.email
+        return self.username
 
-    def __str__(self):              # __unicode__ on Python 2
-        return self.email
+    def __str__(self):
+        return self.username
 
     def has_perm(self, perm, obj=None):
         "Does the user have a specific permission?"
