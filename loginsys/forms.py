@@ -5,5 +5,5 @@ from loginsys.models import MyUser
 class RegistrationForm(UserCreationForm):
     class Meta:
         model = MyUser
-        fields = ('username', 'house_number','password1', 'password2')
+        fields = ('username', 'phone_number','password1', 'password2')
 
