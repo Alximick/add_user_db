@@ -1,3 +1,18 @@
 from django.contrib import admin
+from debt.models import DebtType, Debt
 
-# Register your models here.
+
+class DebtType_Admin(admin.ModelAdmin):
+    fields = ['name', 'slung']
+    list_display = ['name', 'slung']
+    search_fields = ['name']
+
+
+class Debt_Admin(admin.ModelAdmin):
+    fields = ['type', 'user', 'year', 'month', 'amount']
+    list_display = ['type', 'user']
+    search_fields = ['user']
+
+
+admin.site.register(DebtType, DebtType_Admin)
+admin.site.register(Debt, Debt_Admin)
