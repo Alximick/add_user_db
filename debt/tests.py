@@ -4,26 +4,25 @@ from debt.models import DebtType, Debt
 
 
 
-class Debt(TestCase):
+class Debt_test(TestCase):
     title = 'create_note'
     text = '<p> good </p>'
     category_name = 'TODO'
     def setUp(self):
         DebtType.objects.create(name=self.category_name, slung='test')
-        # Debt.objects.create()
-        #     type=DebtType.object.get(name=self.category_name),
-        #                     years='2014',
-        #                     mount='2',
-        #                     amount='1020.32',
-        # )
+        Debt.objects.create(
+             type=DebtType.objects.get(name=self.category_name),
+             year=2014,
+             month=2,
+             amount='1020.32',
+        )
 
 
 
 
     def test_filter(self):
-        print(self.title)
-        # self.assertEqual(print(Debt.objects.get(title=self.name)),
-        #                  print(self.name))
-
+        # print(self.title)
+        self.assertEqual(print(Debt.objects.get(year='2014')),
+                         print('2014'))
         self.assertEqual(print(DebtType.objects.get(name=self.category_name)),
                          print(self.category_name))
