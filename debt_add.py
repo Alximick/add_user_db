@@ -15,12 +15,8 @@ CONFIG = {'ком.': 'community', 'охрана': 'guard',
           }
 
 DEBT_TYPE = ('Эл/Эн', 'Штраф', 'ком.', 'охрана', 'э/энергия', 'снег')
-
-
 MOUNTHS = ('Янв', 'Фев', 'Мар', 'Апр', 'Ма', 'Июн',
            'Июл', 'Авг', 'Сен', 'Окт', 'Ноя', 'Дек')
-
-
 DCT_MOUNTHS = {'Янв': 1, 'Фев': 2, 'Мар': 3, 'Апр': 4, 'Ма': 5, 'Июн': 6,
                'Июл': 7, 'Авг': 8, 'Сен': 9, 'Окт': 10, 'Ноя': 11, 'Дек': 12}
 
@@ -34,7 +30,7 @@ def create_debt_type(name_type, slug_type):
     # print(obj, created)
 
 
-def create_debt(user, debt_type, years, month, amount):
+def create_debt(user, debt_type, years, month, amount, print_value=False):
     username = None
     from debt.models import DebtType, Debt
     from loginsys.admin import MyUser
@@ -51,7 +47,8 @@ def create_debt(user, debt_type, years, month, amount):
         month=month,
         amount=amount,
     )
-    # print(obj, created)
+    if print_value:
+        print(obj, created)
 
 def parser_debt_type(filename):
     read_book = xlrd.open_workbook(filename, on_demand=True,
@@ -71,13 +68,18 @@ def parser_debt_type(filename):
         print('Введите год в первую ячейку')
         print('На пример 2014')
         exit(1)
-
+    second_row = sheet.row_values(1)
+    sum = 0
+    # if row[index] = second_row[0]:
+    #     sum += row[index]
     print(YEAR)
     for rownum in range(sheet.nrows):
         if rownum == 0:
             continue
         row = sheet.row_values(rownum)
+
         for index in range(len(first_row)):
+            flag = True
             if type(first_row[index]) == str and len(first_row[index]) > 0 and row[0] and row[index]:
                 for mounth in MOUNTHS:
                     if re.search(mounth.lower(), first_row[index].lower()):
@@ -87,23 +89,48 @@ def parser_debt_type(filename):
                                 create_debt_type(debt_t, CONFIG[debt_t])
                                 create_debt(row[0], CONFIG[debt_t], YEAR, DCT_MOUNTHS[mounth],
                                             row[index])
+                                flag = False
+                                if row[0] == second_row[0]:
+                                    print(row[0],row[index], sum )
+                                    sum += row[index]
+                                    create_debt(row[0], CONFIG[debt_t], YEAR,
+                                                DCT_MOUNTHS[mounth],
+                                                row[index], True)
                                 # print(row[0], debt_t, 'Год', DCT_MOUNTHS[mounth], row[index])
-                if row[0] and row[index]:
+                if row[0] and row[index] and flag:
                     for debt_t in DEBT_TYPE:
                         if re.search(debt_t.lower(), first_row[index].lower()):
                             # print(row[0], debt_t, 'Год', 'месяц', row[index])
                             dct[index] = debt_t
                             create_debt_type(debt_t, CONFIG[debt_t])
+                            if row[0] == second_row[0]:
+                                print(row[0], row[index], sum)
+                                sum += row[index]
+                                create_debt(row[0], CONFIG[debt_t], YEAR, None,
+                                            row[index],
+                                        True)
                             create_debt(row[0], CONFIG[debt_t], YEAR, None, row[index])
             elif type(first_row[index]) == float and index > 0  and row[0] and row[index]:
                 year, month, *tail = xlrd.xldate_as_tuple(first_row[index], 0)
                 dct[index] = 'None'
                 # print(row[0], 'None', year, month, row[index])
                 create_debt_type('None', 'None')
+                if row[0] == second_row[0]:
+                    print(row[0], row[index], sum)
+                    sum += row[index]
+                    create_debt(row[0], 'None', year, month, row[index], True)
                 create_debt(row[0], 'None', year, month, row[index])
-    print(len(first_row))
+    # print(len(first_row))
+    sum_second_row = 0
+    for sec_row in second_row[1:]:
+        if sec_row:
+            sum_second_row += sec_row
     if first_row[-1] == 'Итого':
-        print(first_row)
+        print(second_row[-1], sum)
+
+    else:
+        print(sum, sum_second_row)
+
     print(dct)
 
 
@@ -114,6 +141,7 @@ if __name__ == '__main__':
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "project.settings")
     django.setup()
     debt_type = parser_debt_type(sys.argv[1])
+
 
 
 # def test():
