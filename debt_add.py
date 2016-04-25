@@ -50,6 +50,7 @@ def create_debt(user, debt_type, years, month, amount, print_value=False):
     if print_value:
         print(obj, created)
 
+
 def parser_debt_type(filename):
     read_book = xlrd.open_workbook(filename, on_demand=True,
                                    encoding_override="utf-8")
@@ -91,7 +92,7 @@ def parser_debt_type(filename):
                                             row[index])
                                 flag = False
                                 if row[0] == second_row[0]:
-                                    print(row[0],row[index], sum )
+                                    print(row[0], row[index], sum)
                                     sum += row[index]
                                     create_debt(row[0], CONFIG[debt_t], YEAR,
                                                 DCT_MOUNTHS[mounth],
@@ -107,10 +108,9 @@ def parser_debt_type(filename):
                                 print(row[0], row[index], sum)
                                 sum += row[index]
                                 create_debt(row[0], CONFIG[debt_t], YEAR, None,
-                                            row[index],
-                                        True)
+                                            row[index], True)
                             create_debt(row[0], CONFIG[debt_t], YEAR, None, row[index])
-            elif type(first_row[index]) == float and index > 0  and row[0] and row[index]:
+            elif type(first_row[index]) == float and index > 0 and row[0] and row[index]:
                 year, month, *tail = xlrd.xldate_as_tuple(first_row[index], 0)
                 dct[index] = 'None'
                 # print(row[0], 'None', year, month, row[index])
@@ -141,7 +141,6 @@ if __name__ == '__main__':
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "project.settings")
     django.setup()
     debt_type = parser_debt_type(sys.argv[1])
-
 
 
 # def test():
