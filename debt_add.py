@@ -2,38 +2,56 @@
 # -*- coding: utf-8 -*-
 import sys
 import os
-from itertools import count
 
 import re
-import xlrd, xlwt
+import xlrd
 import django
 
 CONFIG = {'ком.': 'community', 'охрана': 'guard',
-          'э/энергия': 'power', 'снег': 'snow',}
+          'э/энергия': 'power', 'снег': 'snow'}
 
 
 def parser_debt_type(filename):
     from debt.models import DebtType, Debt
-    # lots = parser_lot(filename)
+    from loginsys.admin import MyUser
     read_book = xlrd.open_workbook(filename, on_demand=True,
                                    encoding_override="utf-8")
     sheet = read_book.sheet_by_index(0)
     dct = {}
     first_row = sheet.row_values(0)
+
+    # Create DebtType
     for index in range(len(first_row)):
         if first_row[index] in CONFIG:
             dct[index] = CONFIG[first_row[index]]
             obj, created = DebtType.objects.get_or_create(name=first_row[index],
                                                           slung=CONFIG[first_row[index]])
             print(obj, created)
-    # for rownum in range(sheet.nrows):
-    #     row = sheet.row_values(rownum)
-    #     for index in range(len(row)):
-    #         if index in dct and row[index] and row[0] \
-    #                 and type(row[index]) == float:
-    #             print(int(row[0]), first_row[index],
-    #                   '(',dct[index], ') = ',row[index])
+    years = re.match(r'\d+', first_row[0])
 
+    # Create Debt
+    for rownum in range(sheet.nrows):
+        row = sheet.row_values(rownum)
+        for index in range(len(row)):
+            if index in dct and row[index] and row[0] and type(row[index]) == float:
+                username = None
+                try:
+                    if type(row[0]) == float:
+                        username = MyUser.objects.get(username=int(row[0]))
+                    elif type(row[0]) == str:
+                        username = MyUser.objects.get(username=row[0])
+                    else:
+                        import ipdb; ipdb.set_trace()
+                except:
+                    pass
+                obj, created = Debt.objects.get_or_create(
+                    type=DebtType.objects.get(slung=CONFIG[first_row[index]]),
+                    year=int(years.group()),
+                    user=username,
+                    month=None,
+                    amount=row[index],
+                )
+                print(obj, created)
     # mounths = ('Янв', 'Фев', 'Мар', 'Апр', 'Ма', 'Июн','Июл', 'Авг', 'Сен', 'Окт', 'Ноя', 'Дек' , '15')
     # debt_type = ('Эл/Эн', 'Штраф', '15')
     # for row in sheet.row_values(0):
@@ -48,16 +66,6 @@ def parser_debt_type(filename):
 
     # return  lots
 
-def add_debt_type(debt_type):
-    '''Заготовок'''
-    for type in debt_type:
-        # user = MyUser.objects.create_user(
-        #     username = lot,
-        #     phone_number = '700000',
-        #     password = 'qwerty123',
-        # )
-        print(type)
-
 
 if __name__ == '__main__':
     if len(sys.argv) != 2:
@@ -66,4 +74,3 @@ if __name__ == '__main__':
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "project.settings")
     django.setup()
     debt_type = parser_debt_type(sys.argv[1])
-    # add_user_db(sys.argv[1])
