@@ -13,6 +13,7 @@ CONFIG = {'ком.': 'community', 'охрана': 'guard',
 
 
 def parser_debt_type(filename):
+    from debt.models import DebtType, Debt
     # lots = parser_lot(filename)
     read_book = xlrd.open_workbook(filename, on_demand=True,
                                    encoding_override="utf-8")
@@ -22,13 +23,16 @@ def parser_debt_type(filename):
     for index in range(len(first_row)):
         if first_row[index] in CONFIG:
             dct[index] = CONFIG[first_row[index]]
-    for rownum in range(sheet.nrows):
-        row = sheet.row_values(rownum)
-        for index in range(len(row)):
-            if index in dct and row[index] and row[0] \
-                    and type(row[index]) == float:
-                print(int(row[0]), first_row[index],
-                      '(',dct[index], ') = ',row[index])
+            obj, created = DebtType.objects.get_or_create(name=first_row[index],
+                                                          slung=CONFIG[first_row[index]])
+            print(obj, created)
+    # for rownum in range(sheet.nrows):
+    #     row = sheet.row_values(rownum)
+    #     for index in range(len(row)):
+    #         if index in dct and row[index] and row[0] \
+    #                 and type(row[index]) == float:
+    #             print(int(row[0]), first_row[index],
+    #                   '(',dct[index], ') = ',row[index])
 
     # mounths = ('Янв', 'Фев', 'Мар', 'Апр', 'Ма', 'Июн','Июл', 'Авг', 'Сен', 'Окт', 'Ноя', 'Дек' , '15')
     # debt_type = ('Эл/Эн', 'Штраф', '15')
@@ -59,7 +63,7 @@ if __name__ == '__main__':
     if len(sys.argv) != 2:
         print('usage: ./create_users.py file')
         sys.exit(1)
-    # os.environ.setdefault("DJANGO_SETTINGS_MODULE", "settings")
-    # django.setup()
+    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "project.settings")
+    django.setup()
     debt_type = parser_debt_type(sys.argv[1])
     # add_user_db(sys.argv[1])
