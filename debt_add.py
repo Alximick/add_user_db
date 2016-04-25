@@ -25,7 +25,7 @@ def parser_debt_type(filename):
         if first_row[index] in CONFIG:
             dct[index] = CONFIG[first_row[index]]
             obj, created = DebtType.objects.get_or_create(name=first_row[index],
-                                                          slung=CONFIG[first_row[index]])
+                                                          slug=CONFIG[first_row[index]])
             print(obj, created)
     years = re.match(r'\d+', first_row[0])
 
@@ -34,18 +34,15 @@ def parser_debt_type(filename):
         row = sheet.row_values(rownum)
         for index in range(len(row)):
             if index in dct and row[index] and row[0] and type(row[index]) == float:
-                username = None
-                try:
-                    if type(row[0]) == float:
-                        username = MyUser.objects.get(username=int(row[0]))
-                    elif type(row[0]) == str:
-                        username = MyUser.objects.get(username=row[0])
-                    else:
-                        import ipdb; ipdb.set_trace()
-                except:
-                    pass
+                # username = None
+                if type(row[0]) == float:
+                    username = MyUser.objects.get(username=int(row[0]))
+                elif type(row[0]) == str:
+                    username = MyUser.objects.get(username=row[0])
+                else:
+                    import ipdb; ipdb.set_trace()
                 obj, created = Debt.objects.get_or_create(
-                    type=DebtType.objects.get(slung=CONFIG[first_row[index]]),
+                    type=DebtType.objects.get(slug=CONFIG[first_row[index]]),
                     year=int(years.group()),
                     user=username,
                     month=None,

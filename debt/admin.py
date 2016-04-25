@@ -3,8 +3,8 @@ from debt.models import DebtType, Debt
 
 
 class DebtType_Admin(admin.ModelAdmin):
-    fields = ['name', 'slung']
-    list_display = ['name', 'slung']
+    fields = ['name', 'slug']
+    list_display = ['name', 'slug']
     search_fields = ['name']
 
 
