@@ -51,9 +51,11 @@ def create_debt(user, debt_type, years, month, amount, test=False):
         amount=amount,
     )
     # print(obj, created)
-    if test:print(obj.amount)
-    return obj.amount
-
+    # if test:print(obj.amount)
+    if created == False:
+        return obj.amount
+    else:
+        return 0
 
 def parser_debt_type(filename):
 
@@ -112,20 +114,14 @@ def parser_debt(filename, lst_debt_type):
                         create_debt(user, debt_type, years, month, amount)
                         test = random.randint(1,len(range(sheet.nrows)))
                         if rownum == (test):
+                            #random selection of cells:
+                            #  выбирает случайную ячейку и смотрит была ли занесена в базу
+                            #  тест выполняется случайное кол-во раз
+                            #  под конец выводит результат сумм
                             print(test)
                             sum += amount
                             sum_lot += create_debt(user, debt_type, years, month, amount, test=True)
-                        # a = Debt.objects.get(
-                        #     type=DebtType.objects.get(slug=debt_type),
-                        #     # type=DebtType.objects.get(slug=debt_type),
-                        #     year=years,
-                        #     # user=username,
-                        #     month=month,
-                        #     amount=amount,
-                        # )
-                        # print(a)
 
-                        # print(user, debt_type, years, month, amount)
         # print(row)
     print('Sum second_row', sum)
     print('Sum in db', sum_lot)
