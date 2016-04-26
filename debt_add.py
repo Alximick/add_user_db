@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-import codecs
+
 import random
 import sys
 import os
@@ -91,11 +91,10 @@ def parser_debt_type(filename):
             lst.append((index, type_debt, year, month))
 
     return lst
-    # print(lst)
 
-def parser_debt(filename, lst_debt_type):
+def parser_debt(lst_debt_type):
     from debt.models import DebtType, Debt
-    read_book = xlrd.open_workbook(filename, on_demand=True)
+    read_book = xlrd.open_workbook(lst_debt_type[0], on_demand=True)
     sheet = read_book.sheet_by_index(0)
     sum = 0
     sum_lot = 0
@@ -132,39 +131,21 @@ def parser_debt(filename, lst_debt_type):
 
 if __name__ == '__main__':
     import json
+    import io
+
+
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "project.settings")
     django.setup()
-    # debt_type = parser_debt_type(sys.argv[1])
     files = os.listdir(os.getcwd())
     my_xlsx = filter(lambda x: x.endswith('.xlsx'), files)
-    with open('data.json', mode='w',  encoding='utf-8') as data_file:
-        for file in my_xlsx:
-            lst = parser_debt_type(file)
-            js = json.dumps(lst, ensure_ascii=False, indent=4)
-            data_file.write(js)
-    #         print(json.loads(js))
-        # parser_debt(file, lst)
 
-    #
-    # data = []
-    # with codecs.open('data.json', encoding='utf-8') as f:
-    #     for line in f:
-    #         # print(line)
-    #         data.append(json.loads(line, 'utf-8'))
-    # print(data)
+    for file in my_xlsx:
+        lst = parser_debt_type(file)
+        with io.open(file +'.json', 'w', encoding='utf-8') as file_json:
+            json.dump(lst, file_json, ensure_ascii=False)
 
-
-    with open('data.json', 'r', encoding='utf-8') as data_file:
-        lst = json.load(data_file)
-        print(lst)
-        # lst = []
-        # for line in data_file:
-        #     lst.append(json.loads(line))
-        # print(lst)
-        # pass
-        # print(data_file)
-        # result = data_file.read()
-        # data = json.loads(data_file)
-        # print(data)
-        # for file in my_xlsx:
-            # parser_debt(file, data)
+    my_json = filter(lambda x: x.endswith('.json'), files)
+    for file in my_json:
+        with open(file, 'r') as file_json:
+            lst = json.load(file_json)
+            parser_debt(lst)
