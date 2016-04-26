@@ -8,12 +8,12 @@ import django
 
 
 DEBT_TYPE_DCT = {'ком.': 'community', 'охрана': 'guard',
-          'э/энергия': 'power1', 'снег': 'snow',
-          'Эл/Эн': 'power', 'Штраф': 'fine',
-          'None': 'None'}
+                 'э/энергия': 'power1', 'снег': 'snow',
+                 'Эл/Эн': 'power', 'Штраф': 'fine',
+                 'None': 'None', 'Штраф эл/эн': 'fine_power'}
 
 
-DEBT_TYPE = ('Эл/Эн', 'Штраф', 'ком.', 'охрана', 'э/энергия', 'снег')
+DEBT_TYPE = ('Штраф эл/эн', 'Штраф','Эл/Эн', 'ком.', 'охрана', 'э/энергия', 'снег')
 
 
 MONTH_ALL = ('Янв', 'Фев', 'Мар', 'Апр', 'Ма', 'Июн',
@@ -54,6 +54,7 @@ def parser_debt_type(filename):
             lst.append((index, type_debt, year, month))
 
     print(lst)
+    print()
 
 if __name__ == '__main__':
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "project.settings")
