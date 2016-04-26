@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+import random
 import sys
 import os
 import re
@@ -29,10 +30,10 @@ def create_debt_type(name_type, slug_type):
     from loginsys.admin import MyUser
     # print(name_type, slug_type)
     obj, created = DebtType.objects.get_or_create(name=name_type, slug=slug_type)
-    print(obj, created)
+    # print(obj, created)
 
 
-def create_debt(user, debt_type, years, month, amount):
+def create_debt(user, debt_type, years, month, amount, test=False):
     username = None
     from debt.models import DebtType, Debt
     from loginsys.admin import MyUser
@@ -49,7 +50,10 @@ def create_debt(user, debt_type, years, month, amount):
         month=month,
         amount=amount,
     )
-    print(obj, created)
+    # print(obj, created)
+    if test:print(obj.amount)
+    return obj.amount
+
 
 def parser_debt_type(filename):
 
@@ -87,22 +91,45 @@ def parser_debt_type(filename):
     # print(lst)
 
 def parser_debt(filename, lst_debt_type):
+    from debt.models import DebtType, Debt
     read_book = xlrd.open_workbook(filename, on_demand=True)
     sheet = read_book.sheet_by_index(0)
+    sum = 0
+    sum_lot = 0
     for rownum in range(sheet.nrows):
         if rownum == 0:
             continue
         row = sheet.row_values(rownum)
-        for index in range(len(row)):
+        for index in range(1, len(row)):
             if row[index] and row[0]:
                 for value in lst_debt_type[1:]:
                     if value[0] == index:
+
                         user = row[0]
                         debt_type, years, month = value[1:]
                         amount = row[index]
+
                         create_debt(user, debt_type, years, month, amount)
+                        test = random.randint(1,len(range(sheet.nrows)))
+                        if rownum == (test):
+                            print(test)
+                            sum += amount
+                            sum_lot += create_debt(user, debt_type, years, month, amount, test=True)
+                        # a = Debt.objects.get(
+                        #     type=DebtType.objects.get(slug=debt_type),
+                        #     # type=DebtType.objects.get(slug=debt_type),
+                        #     year=years,
+                        #     # user=username,
+                        #     month=month,
+                        #     amount=amount,
+                        # )
+                        # print(a)
+
                         # print(user, debt_type, years, month, amount)
         # print(row)
+    print('Sum second_row', sum)
+    print('Sum in db', sum_lot)
+
 
 
 if __name__ == '__main__':
