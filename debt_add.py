@@ -93,7 +93,6 @@ def parser_debt_type(filename):
     return lst
 
 def parser_debt(lst_debt_type):
-    from debt.models import DebtType, Debt
     read_book = xlrd.open_workbook(lst_debt_type[0], on_demand=True)
     sheet = read_book.sheet_by_index(0)
     sum = 0
@@ -106,11 +105,9 @@ def parser_debt(lst_debt_type):
             if row[index] and row[0]:
                 for value in lst_debt_type[1:]:
                     if value[0] == index:
-
                         user = row[0]
                         debt_type, years, month = value[1:]
                         amount = row[index]
-
                         create_debt(user, debt_type, years, month, amount)
                         # print(user, debt_type, years, month, amount, end='')
                         test = random.randint(1,len(range(sheet.nrows)))
@@ -122,6 +119,7 @@ def parser_debt(lst_debt_type):
                             # print(test)
                             sum += amount
                             sum_lot += create_debt(user, debt_type, years, month, amount, test=True)
+
         # print()
         # print(row)
     # print('Sum second_row', sum)
@@ -141,7 +139,7 @@ if __name__ == '__main__':
 
     for file in my_xlsx:
         lst = parser_debt_type(file)
-        with io.open(file +'.json', 'w', encoding='utf-8') as file_json:
+        with io.open(file[:-4] +'.json', 'w', encoding='utf-8') as file_json:
             json.dump(lst, file_json, ensure_ascii=False)
 
     my_json = filter(lambda x: x.endswith('.json'), files)
@@ -149,3 +147,11 @@ if __name__ == '__main__':
         with open(file, 'r') as file_json:
             lst = json.load(file_json)
             parser_debt(lst)
+
+    # если нужно все в 1 файл записать
+    #         res = [parser_debt_type(file) for file in my_xlsx]
+    #         js = json.dumps(res, ensure_ascii=False, indent=4)
+    #         with open('data.json', mode='w', encoding='utf-8') as data_file:
+    #             data_file.write(js)
+    #         with open('data.json', 'r') as file_json:
+    #             lst = json.load(file_json)
