@@ -8,8 +8,7 @@ import django
 
 
 DEBT_TYPE_DCT = {'ком.': 'community', 'охрана': 'guard',
-                 'э/энергия': 'power1', 'снег': 'snow',
-                 'Эл/Эн': 'power', 'Штраф': 'fine',
+                 'снег': 'snow', 'Эл/Эн': 'power', 'Штраф': 'fine',
                  'None': 'None', 'Штраф эл/эн': 'fine_power'}
 
 
@@ -17,12 +16,20 @@ DEBT_TYPE = ('Штраф эл/эн', 'Штраф','Эл/Эн', 'ком.', 'ох�
 
 
 MONTH_ALL = ('Янв', 'Фев', 'Мар', 'Апр', 'Ма', 'Июн',
-         'Июл', 'Авг', 'Сен', 'Окт', 'Ноя', 'Дек')
+             'Июл', 'Авг', 'Сен', 'Окт', 'Ноя', 'Дек')
 
 
 DCT_MONTH = {'Янв': 1, 'Фев': 2, 'Мар': 3, 'Апр': 4, 'Ма': 5,
              'Июн': 6, 'Июл': 7, 'Авг': 8, 'Сен': 9, 'Окт': 10,
              'Ноя': 11, 'Дек': 12, 'None': None}
+
+def create_debt_type(name_type, slug_type):
+
+    from debt.models import DebtType, Debt
+    from loginsys.admin import MyUser
+    # print(name_type, slug_type)
+    obj, created = DebtType.objects.get_or_create(name=name_type, slug=slug_type)
+    print(obj, created)
 
 
 def parser_debt_type(filename):
@@ -44,13 +51,17 @@ def parser_debt_type(filename):
             for debt_t in DEBT_TYPE:
                 if re.search(debt_t.lower(), first_row[index].lower()):
                     # print(CONFIG[debt_t], year, DCT_MONTH[m])
+                    if 'э/энергия' == debt_t:
+                        debt_t = 'Эл/Эн'
                     index, type_debt, year, month = index, DEBT_TYPE_DCT[debt_t], year, DCT_MONTH[month_column]
                     lst.append((index, type_debt, year, month))
+                    create_debt_type(debt_t, type_debt)
                     break
         elif type(first_row[index]) == float and first_row[index] > 2:
             year, month, *tail = xlrd.xldate_as_tuple(first_row[index], 0)
             # print('ком.', year, month)
             index, type_debt, year, month = index, DEBT_TYPE_DCT['ком.'], year, month
+            create_debt_type('ком.', type_debt)
             lst.append((index, type_debt, year, month))
 
     print(lst)
