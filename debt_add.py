@@ -12,7 +12,7 @@ DEBT_TYPE_DCT = {'ком.': 'community', 'охрана': 'guard',
                  'None': 'None', 'Штраф эл/эн': 'fine_power'}
 
 
-DEBT_TYPE = ('Штраф эл/эн', 'Штраф','Эл/Эн', 'ком.', 'охрана', 'э/энергия', 'снег')
+DEBT_TYPE = ('Штраф', 'Штраф эл/эн','Эл/Эн', 'ком.', 'охрана', 'э/энергия', 'снег')
 
 
 MONTH_ALL = ('Янв', 'Фев', 'Мар', 'Апр', 'Ма', 'Июн',
@@ -31,6 +31,25 @@ def create_debt_type(name_type, slug_type):
     obj, created = DebtType.objects.get_or_create(name=name_type, slug=slug_type)
     print(obj, created)
 
+
+def create_debt(user, debt_type, years, month, amount):
+    username = None
+    from debt.models import DebtType, Debt
+    from loginsys.admin import MyUser
+    if type(user) == float:
+        username = MyUser.objects.get(username=int(user))
+    elif type(user) == str:
+        username = MyUser.objects.get(username=user)
+    else:
+        import ipdb; ipdb.set_trace()
+    obj, created = Debt.objects.get_or_create(
+        type=DebtType.objects.get(slug=debt_type),
+        year=years,
+        user=username,
+        month=month,
+        amount=amount,
+    )
+    print(obj, created)
 
 def parser_debt_type(filename):
 
@@ -64,8 +83,27 @@ def parser_debt_type(filename):
             create_debt_type('ком.', type_debt)
             lst.append((index, type_debt, year, month))
 
-    print(lst)
-    print()
+    return lst
+    # print(lst)
+
+def parser_debt(filename, lst_debt_type):
+    read_book = xlrd.open_workbook(filename, on_demand=True)
+    sheet = read_book.sheet_by_index(0)
+    for rownum in range(sheet.nrows):
+        if rownum == 0:
+            continue
+        row = sheet.row_values(rownum)
+        for index in range(len(row)):
+            if row[index] and row[0]:
+                for value in lst_debt_type[1:]:
+                    if value[0] == index:
+                        user = row[0]
+                        debt_type, years, month = value[1:]
+                        amount = row[index]
+                        create_debt(user, debt_type, years, month, amount)
+                        # print(user, debt_type, years, month, amount)
+        # print(row)
+
 
 if __name__ == '__main__':
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "project.settings")
@@ -74,4 +112,5 @@ if __name__ == '__main__':
     files = os.listdir(os.getcwd())
     my_xlsx = filter(lambda x: x.endswith('.xlsx'), files)
     for file in my_xlsx:
-        parser_debt_type(file)
+        lst = parser_debt_type(file)
+        parser_debt(file, lst)
