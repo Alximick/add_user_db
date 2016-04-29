@@ -29,5 +29,17 @@ def logout(request):
     return redirect('/')
 
 
+@csrf_exempt
 def register(request):
-    pass
+    # import ipdb;
+    # ipdb.set_trace()
+    args = {}
+    if request.POST:
+        newuser_form = RegistrationForm(request.POST)
+
+        # if newuser_form.is_valid():
+        #     newuser_form.save()
+        #     return redirect('/')
+        # else:
+        #     args['form'] = newuser_form
+    return render_to_response('reg.html', args)
