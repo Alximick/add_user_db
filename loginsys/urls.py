@@ -6,5 +6,6 @@ urlpatterns = [
     url(r'^login/$', loginsys.views.login, name='login'),
     url(r'^logout/$', loginsys.views.logout, name='logout'),
     url(r'^register/$', loginsys.views.register, name='register'),
+    url(r'^mydebt/$', loginsys.views.mydebt, name='mydebt'),
     url(r'^$', loginsys.views.login),
 ]
