@@ -21,7 +21,5 @@ class loginsys(TestCase):
         self.assertTrue(form.is_valid())
         form.is_valid()
         comment = form.save()
-
-        comment = form.save()
         self.assertEqual(print(comment.username), print(self.name))
         # self.assertEqual(comment.phone_number, self.phone_number)
