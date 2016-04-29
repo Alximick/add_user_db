@@ -61,6 +61,7 @@ TEMPLATES = [
         'DIRS': [
             os.path.join(BASE_DIR + '/templates'),
             os.path.join(BASE_DIR + 'loginsys/templates'),
+            os.path.join(BASE_DIR + 'debt/templates')
         ],
         'APP_DIRS': True,
         'OPTIONS': {

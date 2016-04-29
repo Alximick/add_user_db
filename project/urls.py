@@ -30,6 +30,7 @@ def home(request):
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^auth/', include('loginsys.urls')),
+    url(r'^my/', include('debt.urls')),
     url(r'^$', home)
     # url(r'^search/', include('search.urls')),
     # url(r'^', include('notes.urls')),

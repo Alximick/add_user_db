@@ -41,5 +41,3 @@ def register(request):
             args['form'] = newuser_form
     return render_to_response('reg.html', args)
 
-def mydebt(request):
-    pass
