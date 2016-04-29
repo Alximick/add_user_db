@@ -1,5 +1,11 @@
 <form action="{%  url 'register' %}" method="post">
     {% csrf_token %}
-    {{ form }}
-    <input type="submit" value="Reg" />
+    {% for field in form %}
+        <label for="">{{ field.label_tag }}</label> <br/>
+        {{ field }} <br/>
+    {% endfor %}
+    {% if login_error %}
+        <label class="errors"> {{login_error}}</label>
+    {% endif %}<br/>
+    <input type="submit" value="Register" />
 </form>
