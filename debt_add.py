@@ -36,20 +36,22 @@ def sum_list(lst):
 
 def parser_debt(lst_debt_type):
     read_book = xlrd.open_workbook(lst_debt_type[0], on_demand=True)
+    print(lst_debt_type[0])
     sheet = read_book.sheet_by_index(0)
     sum_all, sum_lot = 0, 0
     for rownum in range(1, sheet.nrows):
         row = sheet.row_values(rownum)
-        if row[0]:
-            # print(row[1: len(lst_debt_type)])
+        if row[0] and type(row[0]) == float:
+            # print(row[0], row[1: len(lst_debt_type)])
             sum_all += sum_list(row[1: len(lst_debt_type)])
         for index in range(1, len(row)):
-            if row[index] and row[0]:
+            if row[index] and row[0] and type(row[index]) == float:
                 for value in lst_debt_type[1:]:
                     if value[0] == index:
                         user = row[0]
                         debt_type, years, month = value[1:]
                         amount = row[index]
+                        # print(user, debt_type, years, month, amount)
                         create_debt(user, debt_type, years, month, amount)
                         sum_lot += amount
     print('Sum exel file', sum_all)
