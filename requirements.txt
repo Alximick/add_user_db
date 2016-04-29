@@ -1,2 +1,4 @@
 django==1.9.5
 xlrd
+django-debug-toolbar
+Jinja2

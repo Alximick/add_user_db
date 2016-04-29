@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'loginsys',
     'debt',
+    'debug_toolbar',
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -72,6 +73,15 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
             ],
         },
+    },
+    {
+        'BACKEND': 'django.template.backends.jinja2.Jinja2',
+        'DIRS': [
+            os.path.join(BASE_DIR + '/templates/jinja2'),
+            os.path.join(BASE_DIR + 'loginsys/templates/jinja2'),
+            os.path.join(BASE_DIR + 'debt/templates/jinja2')
+        ],
+        'APP_DIRS': True,
     },
 ]
 

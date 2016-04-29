@@ -8,7 +8,7 @@ def mydebt(request):
     args = {
         'debt' : Debt.objects.filter(
             user=auth.get_user(request)
-        ),#.select_related('type'),
+        ).select_related('type'),
     }
-    return render_to_response('debt_view.html', args)
+    return render(request, 'jinja2/jinja2_view_debt.html', args)
 

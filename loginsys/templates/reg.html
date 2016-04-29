@@ -1,3 +1,6 @@
+{% extends 'main.html' %}
+{% load staticfiles %}
+{% block content %}
 <form action="{%  url 'register' %}" method="post">
     {% csrf_token %}
     {% for field in form %}
@@ -9,3 +12,4 @@
     {% endif %}<br/>
     <input type="submit" value="Register" />
 </form>
+{% endblock %}

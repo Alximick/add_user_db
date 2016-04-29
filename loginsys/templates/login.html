@@ -1,4 +1,6 @@
-
+{% extends 'main.html' %}
+{% load staticfiles %}
+{% block content %}
 <form action="{% url 'login'%}" method="post">
     {% csrf_token %}
     <label for="username">Имя пользователя</label> <br/>
@@ -11,5 +13,5 @@
     <button type="submit" class="btn btn-default">Войти</button>
    {# <button type="submit" class="btn btn-default"><a href="{% url 'register'%}">Регистрация</a></button> #}
 </form>
-
+{% endblock %}
 
