@@ -22,9 +22,10 @@ from django.conf import settings
 
 def home(request):
     ''' Заглушка '''
-    from django.shortcuts import render_to_response
+    from django.shortcuts import render_to_response, render
     from django.contrib import auth
-    return render_to_response('main.html', {'username': auth.get_user(request).username})
+    return render(request, 'main.html', {})
+    # return render_to_response('main.html', {'username': auth.get_user(request).username})
 
 
 urlpatterns = [

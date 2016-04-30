@@ -5,11 +5,12 @@
     <title>Title</title>
 </head>
 <body>
- {% if not username %}
-          <a href="{% url 'login' %}">Вход</a>
-            {% else %}
-          <a href="{% url 'logout' %}">Выход</a>
-            {% endif %}
+
+                <a href="{% url 'login' %}">Вход</a>
+
+                <p>Welcome {{ user }}!</p>
+                    <a href="{% url 'logout' %}">Выход</a>
+
 <br><a href="{% url 'register' %}">Регистрация</a>
 <br><a href="{% url 'mydebt' %}">Долг</a>
 

@@ -17,10 +17,11 @@ def login(request):
             return redirect('/')
         else:
             args['login_error'] = "Не найдена комбинация логин/пароль"
-            return render_to_response('login.html', args)
+            return render(request, 'login.html', args)
 
     else:
-        return render_to_response('login.html', args)
+
+        return render(request, 'login.html', args)
 
 
 
@@ -39,5 +40,5 @@ def register(request):
             return redirect('/')
         else:
             args['form'] = newuser_form
-    return render_to_response('reg.html', args)
+    return render(request, 'reg.html', args)
 
