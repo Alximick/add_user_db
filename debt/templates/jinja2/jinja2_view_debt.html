@@ -10,9 +10,9 @@
   </tr>
     {% for d in debt_type %}
   <tr>
-    <td>{{ d }}</td>
+    <td>{{ d.name }}</td>
         {% for j in debt %}
-            {% if j.type.name == d %}
+            {% if j.type.name == d.name %}
                 <td>{{ j.amount }}</td>
             {% else %}
                 <td></td>
@@ -29,38 +29,8 @@
 </tr>
 
 </table>
+    
 
-<table>
-<tr>
-    <td></td>
-    {% for d in sum_years.keys  %}
-        <td>{{ d }}</td>
-    {% endfor %}
-</tr>
-
-{% for d in debt_type %}
-  <tr>
-    <td>{{ d }}</td>
-{#        {% for j in sum_years.values %}#}
-{#            {{ j.1 }} == {{ d }}#}
-{#            {% for i in j %}#}
-{#                {{ i }}#}
-{##}
-{#            {% if i.name == d %}#}
-{#                <td>{{ j }}</td>#}
-{##}
-{#            {% else %}#}
-{#                <td></td>#}
-{#            {% endif %}#}
-{#                {% endfor %}#}
-{#        {% endfor %}#}
-  </tr>
-    {% endfor %}
-
-</table>
-
-
- {{ sum_years }}
 {% endblock %}
 
 

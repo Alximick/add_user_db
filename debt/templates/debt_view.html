@@ -1,20 +1,62 @@
+{% extends 'main.html' %}
+{% load staticfiles %}
+{% block content %}
 <table>
   <tr>
     <th></th>
     {% for i in debt %}
-        <th>{{ i.year }}.{{ i.month }}</th>
-      {% endfor %}
-  </tr>{% for i in debt %}
+        <th>{{ i.year }}{% if i.month %}.{{ i.month }}{% endif %}</th>
+    {% endfor %}
+  </tr>
+    {% for d in debt_type %}
   <tr>
-
-    <td> {{ i.type }}</td>
+    <td>{{ d.name }}</td>
+        {% for j in debt %}
+            {% if j.type.name == d.name %}
+                <td>{{ j.amount }}</td>
+            {% else %}
+                <td></td>
+            {% endif %}
+        {% endfor %}
+  </tr>
+    {% endfor %}
+<tr>
+    <td>Sum:</td>
     {% for j in debt %}
-        {% if j.year == i.year and j.month == i.month and i.type == j.type %} {# or i.type == j.type #}
-            <td>{{ j.amount }}</td>
+        <td></td>
+    {% endfor %}
+        <td><font color="red" >{{ sum.amount__sum }}</font></td>
+</tr>
+
+</table>
+
+
+<table>
+<tr>
+<td></td>
+    {% for year in test %}
+<td>        {{ year.year }}.{{ year.month }}</td>
+
+    {% endfor %}
+</tr>
+{% for d in debt_type %}
+
+<tr>
+    <td>{{ d.name }}</td>
+    {% for value in test %}
+        {% if d.id == value.type_id %}
+            <td>{{ value.amount }}</td>
         {% else %}
-             <td></td>
+            <td></td>
         {% endif %}
     {% endfor %}
-    </tr>
+
+</tr>
 {% endfor %}
 </table>
+
+{% endblock %}
+
+
+
+

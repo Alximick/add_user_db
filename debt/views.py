@@ -7,7 +7,7 @@ from django.db.models import Sum
 def add_my_set(lst):
     st = set()
     for l in lst:
-        s = l.type.name
+        s = l.type
         st.add(s)
         # import ipdb;
         # ipdb.set_trace()
@@ -16,10 +16,11 @@ def add_my_set(lst):
 
 def mydebt(request):
     args = {}
-    args['debt'] = Debt.objects.filter(
-        user=auth.get_user(request)).select_related('type')#.order_by('type', 'year', 'month')
-    args['debt_type'] = add_my_set(args['debt'])
-    args['sum'] = args['debt'].aggregate(Sum('amount'))
-
+    debt = Debt.objects.filter(user=auth.get_user(request)).select_related('type')
+    args['debt'] = debt
+    args['debt_type'] = add_my_set(debt)
+    # import ipdb;
+    # ipdb.set_trace()
+    args['sum'] = debt.aggregate(Sum('amount'))
     return render(request, 'jinja2/jinja2_view_debt.html', args)
 
