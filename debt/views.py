@@ -1,7 +1,7 @@
 from django.shortcuts import render, render_to_response
 from debt.models import Debt
 from django.contrib import auth
-
+from django.db.models import Sum
 
 
 def add_my_set(lst):
@@ -13,21 +13,13 @@ def add_my_set(lst):
         # ipdb.set_trace()
     return st
 
-def sum_debt(lst):
-    sum = 0
-    for l in lst:
-        sum += l.amount
-    return sum
 
-# Create your views here.
 def mydebt(request):
-    args = {
-        'debt' : Debt.objects.filter(
-            user=auth.get_user(request)
-        ).select_related('type'),
-    }
+    args = {}
+    args['debt'] = Debt.objects.filter(
+        user=auth.get_user(request)).select_related('type')#.order_by('type', 'year', 'month')
     args['debt_type'] = add_my_set(args['debt'])
-    args['sum'] = sum_debt(args['debt'])
+    args['sum'] = args['debt'].aggregate(Sum('amount'))
 
     return render(request, 'jinja2/jinja2_view_debt.html', args)
 

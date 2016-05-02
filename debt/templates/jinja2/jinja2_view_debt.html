@@ -6,7 +6,7 @@
     <th></th>
     {% for i in debt %}
         <th>{{ i.year }}{% if i.month %}.{{ i.month }}{% endif %}</th>
-      {% endfor %}
+    {% endfor %}
   </tr>
     {% for d in debt_type %}
   <tr>
@@ -25,10 +25,42 @@
     {% for j in debt %}
         <td></td>
     {% endfor %}
-        <td><font color="red" >{{ sum }}</font></td>
+        <td><font color="red" >{{ sum.amount__sum }}</font></td>
 </tr>
+
 </table>
 
+<table>
+<tr>
+    <td></td>
+    {% for d in sum_years.keys  %}
+        <td>{{ d }}</td>
+    {% endfor %}
+</tr>
+
+{% for d in debt_type %}
+  <tr>
+    <td>{{ d }}</td>
+{#        {% for j in sum_years.values %}#}
+{#            {{ j.1 }} == {{ d }}#}
+{#            {% for i in j %}#}
+{#                {{ i }}#}
+{##}
+{#            {% if i.name == d %}#}
+{#                <td>{{ j }}</td>#}
+{##}
+{#            {% else %}#}
+{#                <td></td>#}
+{#            {% endif %}#}
+{#                {% endfor %}#}
+{#        {% endfor %}#}
+  </tr>
+    {% endfor %}
+
+</table>
+
+
+ {{ sum_years }}
 {% endblock %}
 
 
