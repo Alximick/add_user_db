@@ -3,14 +3,38 @@ from debt.models import Debt
 from django.db.models import Sum, Count
 
 
-def my_dict(debt):
-    dct = {}
-    for item in debt:
-        # print(item)
-        year = item['year']
-        type = item['type__name']
-        dct[(year, type)] = item['sum_year']
-    return dct
+def my_all(debt, debt_type, years, sum):
+    all_row = []
+
+    row = ['']
+    for year in years:
+        row.append(year)
+    all_row.append(row)
+
+    for d_type in debt_type:
+        row = []
+        row.append(d_type.name)
+        not_found = True
+        for year in years:
+            for item in debt:
+                if item['year'] == year and item['type__name'] == d_type.name:
+                    row.append(item['sum_year'])
+                    not_found = False
+            if not_found:
+                row.append('')
+        all_row.append(row)
+
+    row = []
+    for index in range(len(years) + 1):
+        if index == 0:
+            row.append('Sum')
+        elif index == len(years):
+            row.append('<font color="red" >'+  str(sum) + '</font>')
+        else:
+            row.append('')
+    all_row.append(row)
+
+    return all_row
 
 def mydebt(request, year=None):
     args = {}
@@ -23,9 +47,16 @@ def mydebt(request, year=None):
         args['filter'] = False
         args['debt'] = debt.values('year', 'type__name').annotate(sum_year=Sum('amount'))
 
+
     args['debt_type'] = {item.type for item in debt}
-    args['sum'] = sum([item.amount for item in debt])#debt.aggregate(Sum('amount'))
-    args['years'] = {item.year for item in debt}
-    args['test'] = my_dict(args['debt'])
+    args['sum'] = sum([item.amount for item in debt])
+    args['years'] = sorted({item.year for item in debt})
+
+    if not args['filter']:
+        args['all'] = my_all(args['debt'], args['debt_type'], args['years'], args['sum'])
+    if args['filter']:
+        pass
+
+
     return render(request, 'jinja2/jinja2_view_debt.html', args)
 

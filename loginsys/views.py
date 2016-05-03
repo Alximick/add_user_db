@@ -14,7 +14,7 @@ def login(request):
         user = auth.authenticate(username=username, password=password)
         if user is not None:
             auth.login(request, user)
-            return redirect('/')
+            return redirect('mydebt')
         else:
             args['login_error'] = "Не найдена комбинация логин/пароль"
             return render(request, 'login.html', args)
