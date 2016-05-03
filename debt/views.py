@@ -77,6 +77,7 @@ def my_all_filter(debt, debt_type, sum):
 
 def mydebt(request, year=None):
     args = {}
+
     if year:
         debt = Debt.objects.filter(user_id=request.user.id, year=year).select_related('type')
         args['filter'] = True
@@ -91,8 +92,16 @@ def mydebt(request, year=None):
     args['sum'] = sum([item.amount for item in debt])
     args['years'] = sorted({item.year for item in debt})
 
+
     if not args['filter']:
+
+        if len(args['years']) == 1:
+            return_url = redirect('mydebt').url + str(args['years'][0])
+            # print(return_url)
+            return redirect(return_url)
+
         args['all'] = my_all(args['debt'], args['debt_type'], args['years'], args['sum'])
+
     if args['filter']:
         args['all'] = my_all_filter(args['debt'], args['debt_type'], args['sum'])
 
