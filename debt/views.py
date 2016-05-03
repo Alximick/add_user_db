@@ -4,9 +4,14 @@ from django.contrib import auth
 from django.db.models import Sum, Count
 
 
-def mydebt(request):
+def mydebt(request, year=None):
     args = {}
-    debt = Debt.objects.filter(user_id=request.user.id).select_related('type')
+    if year:
+        debt = Debt.objects.filter(user_id=request.user.id, year=year).select_related('type')
+        args['filter'] = True
+    else:
+        debt = Debt.objects.filter(user_id=request.user.id).select_related('type')
+        args['filter'] = False
     args['debt'] = debt
     args['debt_type'] = {item.type for item in debt}
 
