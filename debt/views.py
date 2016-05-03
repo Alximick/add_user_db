@@ -8,7 +8,8 @@ def my_all(debt, debt_type, years, sum):
 
     row = ['']
     for year in years:
-        row.append(year)
+        # Если убрать коментарии в шаблоне нужно тогда row.append(year)
+        row.append(r'<a href="/my/debt/' + str(year) + r'">' +  str(year) + r'</a>')
     all_row.append(row)
 
     for d_type in debt_type:
@@ -29,7 +30,7 @@ def my_all(debt, debt_type, years, sum):
         if index == 0:
             row.append('Sum')
         elif index == len(years):
-            row.append('<font color="red" >'+  str(sum) + '</font>')
+            row.append('<font color="red" >' + str(sum) + '</font>')
         else:
             row.append('')
     all_row.append(row)
@@ -47,8 +48,8 @@ def mydebt(request, year=None):
         args['filter'] = False
         args['debt'] = debt.values('year', 'type__name').annotate(sum_year=Sum('amount'))
 
-
-    args['debt_type'] = {item.type for item in debt}
+    debt_type = {item.type for item in debt}
+    args['debt_type'] = debt_type
     args['sum'] = sum([item.amount for item in debt])
     args['years'] = sorted({item.year for item in debt})
 

@@ -15,22 +15,23 @@
     <hr>
 {% if filter == False %}
     {% autoescape off %}
+
     <table>
         {% for item in all %}
             <tr>
-                {% if all.0 == item %}
-                    {% for i in item %}
-                        {% if i != '' %}
-                        <td><a href="{% url 'mydebt' i %}">{{ i }}</a></td>
-                        {% else %}
-                            <td>{{ i }}</td>
-                        {% endif %}
-                    {% endfor %}
-                {% else %}
+{#                {% if all.0 == item %}#}
+{#                    {% for i in item %}#}
+{#                        {% if i != '' %}#}
+{#                        <td><a href="{% url 'mydebt' i %}">{{ i }}</a></td>#}
+{#                        {% else %}#}
+{#                            <td>{{ i }}</td>#}
+{#                        {% endif %}#}
+{#                    {% endfor %}#}
+{#                {% else %}#}
                     {% for i in item %}
                         <td>{{ i }}</td>
                     {% endfor %}
-                {% endif %}
+{#                {% endif %}#}
             </tr>
         {% endfor %}
     </table>
@@ -63,8 +64,13 @@
     </tr>
 
     </table>
+    <hr>
+    {% for d in debt %}
+        {{ d.year }}, {{ d.amount }}
+    {% endfor %}
 {% endif %}
     <hr>
+
 {% endblock %}
 
 
