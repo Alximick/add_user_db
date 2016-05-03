@@ -1,7 +1,7 @@
 {% extends 'main.html' %}
 {% load staticfiles %}
 {% block content %}
-    <style type="text/css">
+<style type="text/css">
     table {
         border-collapse: collapse;
     }
@@ -12,64 +12,61 @@
         text-align: center;
     }
 </style>
-
     <hr>
-    {% if filter == False %}
-<table>
-<tr>
-    <td></td>
-    {% for t in test %}
-        <td><a href="{% url 'mydebt' t.year %}">{{ t.year }}</a></td>
-    {% endfor %}
-</tr>
-{% for d in debt_type %}
-  <tr>
-    <td>{{ d.name }}</td>
-        {% for j in test %}
-            {% if j.type__name == d.name %}
-                <td>{{ j.amount__sum }}</td>
-            {% else %}
-                <td></td>
-            {% endif %}
-        {% endfor %}
-  </tr>
-    {% endfor %}
-<tr>
-    <td>Sum:</td>
-        <td><font color="red" >{{ sum.amount__sum }}</font></td>
-</tr>
-</table>
+{% if filter == False %}
+    <table>
+        <tr>
+            <td>{# 0.0 Пустая ячейка #}</td>
+            {% for item in debt %}
+                {# 1 ряд вывод год задолженности #}
+                <td><a href="{% url 'mydebt' item.year %}">{{ item.year }}</a></td>
+            {% endfor %}
+        </tr>
+        {# Вывод тип задолженности и сумму  #}
+        {% for d_type in debt_type %}
+        <tr>
+            <td>{{ d_type.name }}</td>
+                {% for item in debt %}
+                    {% if item.type__name == d_type.name %}
+                        <td>{{ item.sum_year }}</td>
+                    {% else %}
+                        <td>{# Пусто, если нет данных за год #}</td>
+                    {% endif %}
+                {% endfor %}
+          </tr>
+            {% endfor %}
+        <tr>
+            <td>Sum:</td>
+            <td><font color="red" >{{ sum }}</font></td>
+        </tr>
+    </table>
 {% elif filter == True %}
-<table>
-  <tr>
-    <th></th>
-    {% for i in debt %}
-        <th>{{ i.year }}{% if i.month %}.{{ i.month }}{% endif %}</th>
-    {% endfor %}
-  </tr>
-    {% for d in debt_type %}
-  <tr>
-    <td>{{ d.name }}</td>
-        {% for j in debt %}
-            {% if j.type.name == d.name %}
-                <td>{{ j.amount }}</td>
-            {% else %}
-                <td></td>
-            {% endif %}
+    <table>
+        <tr>
+            <th>{# 0.0 Пустая ячейка #}</th>
+            {# 1 ряд вывод год задолженности #}
+            {% for item in debt %}
+                <th>{% if item.month %}{{ item.month }}.{% endif %}{{ item.year }}</th>
+            {% endfor %}
+        </tr>
+        {% for d_type in debt_type %}
+            <tr>
+                <td>{{ d_type.name }}</td>
+                {% for item in debt %}
+                    {% if item.type.name == d_type.name %}
+                        <td>{{ item.amount }}</td>
+                    {% else %}
+                        <td></td>
+                    {% endif %}
+                {% endfor %}
+            </tr>
         {% endfor %}
-  </tr>
-    {% endfor %}
-<tr>
-    <td>Sum:</td>
-        <td><font color="red" >{{ sum.amount__sum }}</font></td>
-</tr>
+    <tr>
+        <td>Sum:</td>
+        <td><font color="red" >{{ sum }}</font></td>
+    </tr>
 
-</table>
-
-
+    </table>
 {% endif %}
+
 {% endblock %}
-
-
-
-
