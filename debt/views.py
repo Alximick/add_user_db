@@ -83,22 +83,21 @@ def mydebt(request, year=None):
     args = {}
 
     if year:
-        args['debt'] = Debt.objects.filter(user_id=request.user.id, year=year)\
+        debt = Debt.objects.filter(user_id=request.user.id, year=year)\
             .select_related('type')
-        args['debt_type'] = {item.type.name for item in args['debt']}
-        args['sum'] = sum([item.amount for item in args['debt']])
-        args['years'] = sorted({item.year for item in args['debt']})
-        args['all'] = my_all_filter(args['debt'], args['debt_type'], args['sum'])
+        debt_type = {item.type.name for item in debt}
+        debt_sum = sum([item.amount for item in debt])
+        args['all'] = my_all_filter(debt, debt_type, debt_sum)
     else:
-        args['debt'] = Debt.objects.filter(user_id=request.user.id)\
+        debt = Debt.objects.filter(user_id=request.user.id)\
             .select_related('type').values('year', 'type__name')\
             .annotate(sum_year=Sum('amount'))
-        args['years'] = sorted({item['year'] for item in args['debt']})
-        args['debt_type'] = {item['type__name'] for item in args['debt']}
-        args['sum'] = sum([item['sum_year'] for item in args['debt']])
-        args['all'] = my_all(args['debt'], args['debt_type'], args['years'], args['sum'])
-        if len(args['years']) == 1:
-            return_url = redirect('mydebt').url + str(args['years'][0])
+        years = sorted({item['year'] for item in debt})
+        debt_type = {item['type__name'] for item in debt}
+        debt_sum = sum([item['sum_year'] for item in debt])
+        args['all'] = my_all(debt, debt_type, years, debt_sum)
+        if len(years) == 1:
+            return_url = redirect('mydebt').url + str(years[0])
             return redirect(return_url)
 
 
