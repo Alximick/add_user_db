@@ -3,6 +3,18 @@ from debt.models import Debt
 from django.db.models import Sum, Count
 
 
+def row_sum(sum, size):
+    row = []
+    for index in range(size):
+        if index == 0:
+            row.append('Sum')
+        elif index == (size - 1):
+            row.append('<font color="red" >' + str(sum) + '</font>')
+        else:
+            row.append('')
+    return row
+
+
 def my_all(debt, debt_type, years, sum):
     all_row = []
     url = redirect('mydebt')
@@ -20,24 +32,18 @@ def my_all(debt, debt_type, years, sum):
         for year in years:
             for item in debt:
                 if item['year'] == year and item['type__name'] == d_type.name:
-                    url_sum_year = r'<a href="' + url.url + str(year) + r'">' +  str(item['sum_year']) + r'</a>'
+                    url_sum_year = r'<a href="' + url.url + str(year) + r'">' +  \
+                                   str(item['sum_year']) + r'</a>'
                     row.append(url_sum_year)
                     not_found = False
             if not_found:
                 row.append('')
         all_row.append(row)
 
-    row = []
-    for index in range(len(years) + 1):
-        if index == 0:
-            row.append('Sum')
-        elif index == len(years):
-            row.append('<font color="red" >' + str(sum) + '</font>')
-        else:
-            row.append('')
-    all_row.append(row)
+    all_row.append(row_sum(sum, len(all_row[0])))
 
     return all_row
+
 
 def my_all_filter(debt, debt_type, sum):
     all_row = []
@@ -56,22 +62,15 @@ def my_all_filter(debt, debt_type, sum):
             if not year_month:
                 continue
             for item in debt:
-                if item.year == year_month[0] and item.month == year_month[1] and item.type.name == d_type.name:
+                if item.year == year_month[0] and item.month == year_month[1]\
+                        and item.type.name == d_type.name:
                     row.append(item.amount)
                     not_found = False
             if not_found:
                 row.append('')
         all_row.append(row)
 
-    row = []
-    for index in range(len(all_row[0])):
-        if index == 0:
-            row.append('Sum')
-        elif index == (len(all_row[0]) - 1):
-            row.append('<font color="red" >' + str(sum) + '</font>')
-        else:
-            row.append('')
-    all_row.append(row)
+    all_row.append(row_sum(sum, len(all_row[0])))
 
     return all_row
 
