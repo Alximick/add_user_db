@@ -68,5 +68,34 @@
 
     </table>
 {% endif %}
+    <hr>
+
+
+    <table>
+        <tr>
+            <td></td>
+            {% for year in years %}
+                <td>{{ year }}</td>
+            {% endfor %}
+
+        </tr>
+
+    {% for d_type in debt_type %}
+        <tr>
+            <td>{{ d_type }}</td>
+            {% for year in years %}
+                <td></td>
+{#                {% if ПРОВЕРИТЬ ЧТО В СЛОВАРЕ ЕСТЬ ЭТО  %}#}
+{#                <td> {{ ПОЛУЧИТЬ ЗНАЧЕНИЕ ИЗ СЛОВАРЯ }}</td>#}
+{#                {% else %}#}
+{#                <td></td>#}
+{#                {% endif %}#}
+            {% endfor %}
+        </tr>
+    {% endfor %}
+
+
+    </table>
+
 
 {% endblock %}
