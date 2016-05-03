@@ -9,7 +9,8 @@ def my_all(debt, debt_type, years, sum):
     row = ['']
     for year in years:
         # Если убрать коментарии в шаблоне нужно тогда row.append(year)
-        row.append(r'<a href="/my/debt/' + str(year) + r'">' +  str(year) + r'</a>')
+        url_year = r'<a href="/my/debt/' + str(year) + r'">' +  str(year) + r'</a>'
+        row.append(url_year)
     all_row.append(row)
 
     for d_type in debt_type:
@@ -19,7 +20,8 @@ def my_all(debt, debt_type, years, sum):
         for year in years:
             for item in debt:
                 if item['year'] == year and item['type__name'] == d_type.name:
-                    row.append(item['sum_year'])
+                    url_sum_year = r'<a href="/my/debt/' + str(year) + r'">' +  str(item['sum_year']) + r'</a>'
+                    row.append(url_sum_year)
                     not_found = False
             if not_found:
                 row.append('')
