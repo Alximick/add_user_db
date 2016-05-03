@@ -36,7 +36,7 @@ def parser_debt_type(filename):
     read_book = xlrd.open_workbook(filename, on_demand=True)
     sheet = read_book.sheet_by_index(0)
     first_row = sheet.row_values(0)
-
+    create_debt_type('Заезды', 'races')
     year = re.search(r'\d+', filename.lower()).group()
     lst = [filename,]
 
