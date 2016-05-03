@@ -75,7 +75,7 @@
         <tr>
             <td></td>
             {% for year in years %}
-                <td>{{ year }}</td>
+                <td>1</td>
             {% endfor %}
 
         </tr>
@@ -84,12 +84,13 @@
         <tr>
             <td>{{ d_type }}</td>
             {% for year in years %}
-                <td></td>
-{#                {% if ПРОВЕРИТЬ ЧТО В СЛОВАРЕ ЕСТЬ ЭТО  %}#}
-{#                <td> {{ ПОЛУЧИТЬ ЗНАЧЕНИЕ ИЗ СЛОВАРЯ }}</td>#}
-{#                {% else %}#}
-{#                <td></td>#}
-{#                {% endif %}#}
+
+                {% for k,v in test.items %}
+                    {% if k.0 == year and k.1 == d_type.name %}
+                        <td>{{ year }}</td>
+                        <td>{{ v }}</td>
+                    {% endif %}
+                {% endfor %}
             {% endfor %}
         </tr>
     {% endfor %}
