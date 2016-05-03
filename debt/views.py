@@ -9,7 +9,6 @@ def my_all(debt, debt_type, years, sum):
 
     row = ['']
     for year in years:
-        # Если убрать коментарии в шаблоне нужно тогда row.append(year)
         url_year = r'<a href="'+ url.url + str(year) + r'">' +  str(year) + r'</a>'
         row.append(url_year)
     all_row.append(row)
@@ -40,6 +39,43 @@ def my_all(debt, debt_type, years, sum):
 
     return all_row
 
+def my_all_filter(debt, debt_type, sum):
+    all_row = []
+    row = ['']
+    for item in debt:
+        year, month = item.year, item.month
+        row.append((year, month))
+    all_row.append(set(row))
+
+    for d_type in debt_type:
+        row = []
+        print(d_type)
+        row.append(d_type)
+        not_found = True
+        for year_month in all_row[0]:
+            if not year_month:
+                continue
+            for item in debt:
+                if item.year == year_month[0] and item.month == year_month[1] and item.type.name == d_type.name:
+                    row.append(item.amount)
+                    not_found = False
+            if not_found:
+                row.append('')
+        all_row.append(row)
+
+    row = []
+    for index in range(len(all_row[0])):
+        if index == 0:
+            row.append('Sum')
+        elif index == (len(all_row[0]) - 1):
+            row.append('<font color="red" >' + str(sum) + '</font>')
+        else:
+            row.append('')
+    all_row.append(row)
+
+    return all_row
+
+
 def mydebt(request, year=None):
     args = {}
     if year:
@@ -59,7 +95,7 @@ def mydebt(request, year=None):
     if not args['filter']:
         args['all'] = my_all(args['debt'], args['debt_type'], args['years'], args['sum'])
     if args['filter']:
-        pass
+        args['all'] = my_all_filter(args['debt'], args['debt_type'], args['sum'])
 
 
     return render(request, 'jinja2/jinja2_view_debt.html', args)

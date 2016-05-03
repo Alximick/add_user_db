@@ -13,12 +13,26 @@
     }
 </style>
     <hr>
-{% if filter == False %}
-    {% autoescape off %}
-
+   {% autoescape off %}
     <table>
         {% for item in all %}
             <tr>
+                {% for i in item %}
+                    <td>{{ i }}</td>
+                {% endfor %}
+            </tr>
+        {% endfor %}
+    </table>
+{% endautoescape %}
+
+{#    #}
+{#    #}
+{#{% if filter == False %}#}
+{#    {% autoescape off %}#}
+{##}
+{#    <table>#}
+{#        {% for item in all %}#}
+{#            <tr>#}
 {#                {% if all.0 == item %}#}
 {#                    {% for i in item %}#}
 {#                        {% if i != '' %}#}
@@ -28,49 +42,70 @@
 {#                        {% endif %}#}
 {#                    {% endfor %}#}
 {#                {% else %}#}
-                    {% for i in item %}
-                        <td>{{ i }}</td>
-                    {% endfor %}
+{#                    {% for i in item %}#}
+{#                        <td>{{ i }}</td>#}
+{#                    {% endfor %}#}
 {#                {% endif %}#}
-            </tr>
-        {% endfor %}
-    </table>
-{% endautoescape %}
-
-{% elif filter == True %}
-    <table>
-        <tr>
-            <th>{# 0.0 Пустая ячейка #}</th>
+{#            </tr>#}
+{#        {% endfor %}#}
+{#    </table>#}
+{#{% endautoescape %}#}
+{##}
+{#{% elif filter == True %}#}
+{#    <table>#}
+{#        <tr>#}
+{#            <th></th>#}
             {# 1 ряд вывод год задолженности #}
-            {% for item in debt %}
-                <th>{% if item.month %}{{ item.month }}.{% endif %}{{ item.year }}</th>
-            {% endfor %}
-        </tr>
-        {% for d_type in debt_type %}
-            <tr>
-                <td>{{ d_type.name }}</td>
-                {% for item in debt %}
-                    {% if item.type.name == d_type.name %}
-                        <td>{{ item.amount }}</td>
-                    {% else %}
-                        <td></td>
-                    {% endif %}
-                {% endfor %}
-            </tr>
-        {% endfor %}
-    <tr>
-        <td>Sum:</td>
-        <td><font color="red" >{{ sum }}</font></td>
-    </tr>
-
-    </table>
-    <hr>
-    {% for d in debt %}
-        {{ d.year }}, {{ d.amount }}
-    {% endfor %}
-{% endif %}
-    <hr>
-
+{#            {% for item in debt %}#}
+{#                <th>{% if item.month %}{{ item.month }}.{% endif %}{{ item.year }}</th>#}
+{#            {% endfor %}#}
+{#        </tr>#}
+{#        {% for d_type in debt_type %}#}
+{#            <tr>#}
+{#                <td>{{ d_type.name }}</td>#}
+{#                {% for item in debt %}#}
+{#                    {% if item.type.name == d_type.name %}#}
+{#                        <td>{{ item.amount }}</td>#}
+{#                    {% else %}#}
+{#                        <td></td>#}
+{#                    {% endif %}#}
+{#                {% endfor %}#}
+{#            </tr>#}
+{#        {% endfor %}#}
+{#    <tr>#}
+{#        <td>Sum:</td>#}
+{#        <td><font color="red" >{{ sum }}</font></td>#}
+{#    </tr>#}
+{##}
+{#    </table>#}
+{#    <hr>#}
+{#    {% for d in debt %}#}
+{#        {{ d.year }}, {{ d.amount }}#}
+{#    {% endfor %}#}
+{#{% endif %}#}
+{#    <hr>#}
+{#   {% autoescape off %}#}
+{##}
+{#    <table>#}
+{#        {% for item in all %}#}
+{#            <tr>#}
+{#                {% if all.0 == item %}#}
+{#                    {% for i in item %}#}
+{#                        {% if i != '' %}#}
+{#                        <td><a href="{% url 'mydebt' i %}">{{ i }}</a></td>#}
+{#                        {% else %}#}
+{#                            <td>{{ i }}</td>#}
+{#                        {% endif %}#}
+{#                    {% endfor %}#}
+{#                {% else %}#}
+{#                    {% for i in item %}#}
+{#                        <td>{{ i }}</td>#}
+{#                    {% endfor %}#}
+{#                {% endif %}#}
+{#            </tr>#}
+{#        {% endfor %}#}
+{#    </table>#}
+{#{% endautoescape %}#}
 {% endblock %}
 
 
