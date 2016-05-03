@@ -2,3 +2,6 @@
 .idea/*
 *.xls*
 *.xlsx
+db.sqlite3
+
+
