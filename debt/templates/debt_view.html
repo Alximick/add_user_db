@@ -1,63 +1,29 @@
 {% extends 'main.html' %}
 {% load staticfiles %}
 {% block content %}
-<table>
-  <tr>
-    <th></th>
-    {% for i in debt %}
-        <th>{{ i.year }}{% if i.month %}.{{ i.month }}{% endif %}</th>
-    {% endfor %}
-  </tr>
-    {% for d in debt_type %}
-  <tr>
-    <td>{{ d.name }}</td>
-        {% for j in debt %}
-            {% if j.type.name == d.name %}
-                <td>{{ j.amount }}</td>
-            {% else %}
-                <td></td>
-            {% endif %}
+<style type="text/css">
+    table {
+        border-collapse: collapse;
+    }
+    table th,
+    table td {
+        padding: 0 5px;
+        border: 1px solid #000;
+        text-align: center;
+    }
+</style>
+    <hr>
+   {% autoescape off %}
+    <table>
+        {% for item in all %}
+            <tr>
+                {% for i in item %}
+                    <td>{{ i }}</td>
+                {% endfor %}
+            </tr>
         {% endfor %}
-  </tr>
-    {% endfor %}
-<tr>
-    <td>Sum:</td>
-    {% for j in debt %}
-        <td></td>
-    {% endfor %}
-        <td><font color="red" >{{ sum.amount__sum }}</font></td>
-</tr>
-
-</table>
-
-<table>
-<tr>
-    <td></td>
-    {% for t in test %}
-        <td>{{ t.year }}</td>
-    {% endfor %}
-</tr>
-{% for d in debt_type %}
-  <tr>
-    <td>{{ d.name }}</td>
-        {% for j in test %}
-            {% if j.type__name == d.name %}
-                <td>{{ j.amount__sum }}</td>
-            {% else %}
-                <td></td>
-            {% endif %}
-        {% endfor %}
-  </tr>
-    {% endfor %}
-<tr>
-    <td>Sum:</td>
-    {% for j in debt %}
-        <td></td>
-    {% endfor %}
-        <td><font color="red" >{{ sum.amount__sum }}</font></td>
-</tr>
-</table>
-{{ demo }}
+    </table>
+{% endautoescape %}
 
 {% endblock %}
 

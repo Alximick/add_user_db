@@ -59,8 +59,9 @@ def my_all_filter(debt, debt_type, sum):
     for d_type in debt_type:
         row = []
         row.append(d_type)
-        not_found = True
+
         for year_month in all_row[0]:
+            not_found = True
             if not year_month:
                 continue
             for item in debt:
@@ -70,7 +71,7 @@ def my_all_filter(debt, debt_type, sum):
                     row.append(item.amount)
                     not_found = False
             if not_found:
-                row.append('<td></td>')
+                row.append('')
         all_row.append(row)
 
     all_row.append(row_sum(sum, len(all_row[0])))
@@ -101,5 +102,5 @@ def mydebt(request, year=None):
             return redirect(return_url)
 
 
-    return render(request, 'jinja2/jinja2_view_debt.html', args)
+    return render(request, 'debt_view.html', args)
 
