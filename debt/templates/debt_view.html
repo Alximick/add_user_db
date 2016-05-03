@@ -30,30 +30,34 @@
 
 </table>
 
-
 <table>
 <tr>
-<td></td>
-    {% for year in test %}
-<td>        {{ year.year }}.{{ year.month }}</td>
-
+    <td></td>
+    {% for t in test %}
+        <td>{{ t.year }}</td>
     {% endfor %}
 </tr>
 {% for d in debt_type %}
-
-<tr>
+  <tr>
     <td>{{ d.name }}</td>
-    {% for value in test %}
-        {% if d.id == value.type_id %}
-            <td>{{ value.amount }}</td>
-        {% else %}
-            <td></td>
-        {% endif %}
+        {% for j in test %}
+            {% if j.type__name == d.name %}
+                <td>{{ j.amount__sum }}</td>
+            {% else %}
+                <td></td>
+            {% endif %}
+        {% endfor %}
+  </tr>
     {% endfor %}
-
+<tr>
+    <td>Sum:</td>
+    {% for j in debt %}
+        <td></td>
+    {% endfor %}
+        <td><font color="red" >{{ sum.amount__sum }}</font></td>
 </tr>
-{% endfor %}
 </table>
+{{ demo }}
 
 {% endblock %}
 
