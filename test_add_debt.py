@@ -16,7 +16,7 @@ def create_debt(user, debt_type, years, month, amount):
         username = MyUser.objects.get(username=user)
     else:
         import ipdb; ipdb.set_trace()
-    obj, created = Debt.objects.update_or_create(
+    obj, created = Debt.objects.get_or_create(
         type=DebtType.objects.get(slug=debt_type),
         year=years,
         user=username,
