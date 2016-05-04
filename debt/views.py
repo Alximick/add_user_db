@@ -4,7 +4,7 @@ from django.db.models import Sum, Count
 
 
 def mydebt(request, year=None):
-    
+
     if year:
         debt = Debt.objects.filter(user_id=request.user.id, year=year)\
             .select_related('type')
@@ -30,4 +30,4 @@ def mydebt(request, year=None):
             return_url = redirect('mydebt').url + str(args['years'][0])
             return redirect(return_url)
 
-    return render(request, 'jinja2_view_debt.jinja', args)
+    return render(request, 'jinja2_view_debt.jinja.html', args)

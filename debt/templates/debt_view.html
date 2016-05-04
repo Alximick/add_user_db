@@ -1,32 +1,34 @@
-{% extends 'main.html' %}
-{% load staticfiles %}
-{% block content %}
-<style type="text/css">
-    table {
-        border-collapse: collapse;
-    }
-    table th,
-    table td {
-        padding: 0 5px;
-        border: 1px solid #000;
-        text-align: center;
-    }
-</style>
-    <hr>
-   {% autoescape off %}
-    <table>
-        {% for row in all %}
-            <tr>
-                {% for column in row %}
-                    <td>{{ column }}</td>
-                {% endfor %}
-            </tr>
-        {% endfor %}
-    </table>
-{% endautoescape %}
-
-{% endblock %}
-
-
-
-
+{#{% extends 'main.html' %}#}
+{#{% load staticfiles %}#}
+{#{% block content %}#}
+{#<style type="text/css">#}
+{#    table {#}
+{#        border-collapse: collapse;#}
+{#    }#}
+{#    table th,#}
+{#    table td {#}
+{#        padding: 0 5px;#}
+{#        border: 1px solid #000;#}
+{#        text-align: center;#}
+{#    }#}
+{#</style>#}
+{#    <hr>#}
+{#   {% autoescape off %}#}
+{#    <table>#}
+{#        {% for row in all %}#}
+{#            <tr>#}
+{#            {%  set index = 0 %}#}
+{#            {%  %}#}
+{#                {% for column in row %}#}
+{#                    <td>{{ column }}</td>#}
+{#                {% endfor %}#}
+{#            </tr>#}
+{#        {% endfor %}#}
+{#    </table>#}
+{#{% endautoescape %}#}
+{##}
+{#{% endblock %}#}
+{##}
+{##}
+{##}
+{##}

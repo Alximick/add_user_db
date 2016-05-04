@@ -68,7 +68,7 @@ TEMPLATES = [
         ],
         "APP_DIRS": True,
         "OPTIONS": {
-            "match_extension": ".jinja",
+            "match_extension": ".jinja.html",
             "context_processors": [
                 "django.contrib.auth.context_processors.auth",
                 "django.template.context_processors.debug",
