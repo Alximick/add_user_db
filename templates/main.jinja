@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+                <a href="{{ url ('login') }}">Вход</a>
+
+                <p>Welcome {{ user }}!</p>
+                    <a href="{{ url ('logout') }}">Выход</a>
+
+<br><a href="{{ url ('register') }}">Регистрация</a>
+<br><a href="{{ url ('mydebt') }}">Долг</a>
+
+{% block content %}{% endblock %}
+</body>
+</html>

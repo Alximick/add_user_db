@@ -3,14 +3,6 @@ from debt.models import Debt
 from django.db.models import Sum, Count
 
 
-def my_dict(debt, filtered=False):
-    if filtered:
-        return {((item.month, item.year), item.type.name): item.amount for item in debt}
-    else:
-        return {(item['year'], item['type__name']):item['sum_year'] for item in debt}
-
-
-
 def mydebt(request, year=None):
     args = {}
 
@@ -21,7 +13,7 @@ def mydebt(request, year=None):
         args['years'] = sorted({(item.month, item.year) for item in debt})
         args['debt_sum'] = sum([item.amount for item in debt])
         args['filter'] = True
-        args['all'] = my_dict(debt, True)#my_all_filter(debt, args['debt_type'], args['debt_sum'])
+        args['all'] = {((item.month, item.year), item.type.name): item.amount for item in debt}
     else:
         debt = Debt.objects.filter(user_id=request.user.id)\
             .select_related('type').values('year', 'type__slug','type__name')\
@@ -29,12 +21,12 @@ def mydebt(request, year=None):
         args['years'] = sorted({item['year'] for item in debt})
         args['debt_type'] = {item['type__name'] for item in debt}
         args['debt_sum'] = sum([item['sum_year'] for item in debt])
-        args['all'] = my_dict(debt)#my_all(debt, args['debt_type'], args['years'], args['debt_sum'])
+        args['all'] = {(item['year'], item['type__name']):item['sum_year'] for item in debt}
 
 
-        # if len(years) == 1:
-        #     return_url = redirect('mydebt').url + str(years[0])
-        #     return redirect(return_url)
+        if len(args['years']) == 1:
+            return_url = redirect('mydebt').url + str(args['years'][0])
+            return redirect(return_url)
 
 
     return render(request, 'jinja2_view_debt.jinja', args)

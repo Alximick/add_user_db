@@ -11,7 +11,6 @@ class DebtType_Admin(admin.ModelAdmin):
 class Debt_Admin(admin.ModelAdmin):
     fields = ['type', 'user', 'year', 'month', 'amount']
     list_display = ['type', 'user', 'amount']
-    search_fields = ['user']
 
 
 admin.site.register(DebtType, DebtType_Admin)
