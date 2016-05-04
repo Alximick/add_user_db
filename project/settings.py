@@ -41,6 +41,8 @@ INSTALLED_APPS = [
     'loginsys',
     'debt',
     'debug_toolbar',
+    'jinja2',
+    'django_jinja',
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -58,6 +60,27 @@ ROOT_URLCONF = 'project.urls'
 
 TEMPLATES = [
     {
+        "BACKEND": "django_jinja.backend.Jinja2",
+        'DIRS': [
+            os.path.join(BASE_DIR + '/templates'),
+            os.path.join(BASE_DIR + 'loginsys/templates'),
+            os.path.join(BASE_DIR + 'debt/templates')
+        ],
+        "APP_DIRS": True,
+        "OPTIONS": {
+            "match_extension": ".jinja",
+            "context_processors": [
+                "django.contrib.auth.context_processors.auth",
+                "django.template.context_processors.debug",
+                "django.template.context_processors.i18n",
+                "django.template.context_processors.media",
+                "django.template.context_processors.static",
+                "django.template.context_processors.tz",
+                "django.contrib.messages.context_processors.messages",
+            ],
+        }
+    },
+    {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
             os.path.join(BASE_DIR + '/templates'),
@@ -74,15 +97,8 @@ TEMPLATES = [
             ],
         },
     },
-    {
-        'BACKEND': 'django.template.backends.jinja2.Jinja2',
-        'DIRS': [
-            os.path.join(BASE_DIR + '/templates/jinja2'),
-            os.path.join(BASE_DIR + 'loginsys/templates/jinja2'),
-            os.path.join(BASE_DIR + 'debt/templates/jinja2')
-        ],
-        'APP_DIRS': True,
-    },
+
+
 ]
 
 WSGI_APPLICATION = 'project.wsgi.application'
