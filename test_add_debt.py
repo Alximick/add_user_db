@@ -6,7 +6,7 @@ import xlrd
 import django
 
 
-def create_debt(user, debt_type, years, month, amount, test=False):
+def create_debt(user, debt_type, years, month, amount):
     username = None
     from debt.models import DebtType, Debt
     from loginsys.admin import MyUser
@@ -23,13 +23,31 @@ def create_debt(user, debt_type, years, month, amount, test=False):
         month=month,
         amount=amount,
     )
-    # print(obj, created)
+
+    if not created:
+        return obj.amount
+    else:
+        return 0
+
+
+DCT_DEBT_AMOUNT = {
+    '2014_15.марта.2016.xlsx': '295906.00',
+    '2015_15.марта.2016.xlsx' : '544209.40',
+    '2016_15.марта.2016.xlsx': '410943.00',
+    'Roads_15.марта.2016.xlsx': '21500.00'
+}
 
 
 def parser_debt(lst_debt_type):
+
+    if lst_debt_type[0] not in DCT_DEBT_AMOUNT:
+        return None
+
     read_book = xlrd.open_workbook(lst_debt_type[0], on_demand=True)
     print(lst_debt_type[0])
     sheet = read_book.sheet_by_index(0)
+    sum_lot = 0
+
     for rownum in range(1, sheet.nrows):
         row = sheet.row_values(rownum)
         for index in range(1, len(row)):
@@ -39,8 +57,12 @@ def parser_debt(lst_debt_type):
                         user = row[0]
                         debt_type, years, month = value[1:]
                         amount = row[index]
-                        create_debt(user, debt_type, years, month, amount)
+                        sum_lot += create_debt(user, debt_type, years, month, amount)
 
+    if str(sum_lot) == DCT_DEBT_AMOUNT[lst_debt_type[0]]:
+        print('All debt add')
+    else:
+        print('Sum in db', sum_lot, '!= Sum file :', DCT_DEBT_AMOUNT[lst_debt_type[0]])
 
 if __name__ == '__main__':
     import json
