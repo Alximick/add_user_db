@@ -6,7 +6,7 @@ import xlrd
 import django
 
 
-def create_debt(user, debt_type, years, month, amount, test=False):
+def create_debt(user, debt_type, years, month, amount, filename, test=False):
     username = None
     from debt.models import DebtType, Debt
     from loginsys.admin import MyUser
@@ -22,6 +22,7 @@ def create_debt(user, debt_type, years, month, amount, test=False):
         user=username,
         month=month,
         amount=amount,
+        imported_from=filename
     )
     # print(obj, created)
 
@@ -39,7 +40,7 @@ def parser_debt(lst_debt_type):
                         user = row[0]
                         debt_type, years, month = value[1:]
                         amount = row[index]
-                        create_debt(user, debt_type, years, month, amount)
+                        create_debt(user, debt_type, years, month, amount, lst_debt_type[0])
 
 
 if __name__ == '__main__':

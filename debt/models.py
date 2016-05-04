@@ -20,6 +20,7 @@ class Debt(models.Model):
                                  blank=True, null=True)
     date_added = models.DateTimeField(auto_now_add=True)
     date_modified = models.DateTimeField(auto_now=True)
+    imported_from = models.TextField()
 
     # def __str__(self):
     #     return self.type
