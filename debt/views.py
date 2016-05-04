@@ -3,19 +3,12 @@ from debt.models import Debt
 from django.db.models import Sum, Count
 
 
-def my_dict(debt, filter=False):
-    dct = {}
-    for item in debt:
-        if filter:
-            year = item.year
-            type = item.type.name
-            month = item.month
-            dct[((month, year), type)] = item.amount
-        else:
-            year = item['year']
-            type = item['type__name']
-            dct[(year, type)] = item['sum_year']
-    return dct
+def my_dict(debt, filtered=False):
+    if filtered:
+        return {((item.month, item.year), item.type.name): item.amount for item in debt}
+    else:
+        return {(item['year'], item['type__name']):item['sum_year'] for item in debt}
+
 
 
 def mydebt(request, year=None):
@@ -47,16 +40,16 @@ def mydebt(request, year=None):
     return render(request, 'jinja2_view_debt.jinja', args)
 
 
-def row_sum(sum, size):
-    row = []
-    for index in range(size):
-        if index == 0:
-            row.append('Sum')
-        elif index == (size - 1):
-            row.append('<font color="red" >' + str(sum) + '</font>')
-        else:
-            row.append('')
-    return row
+# def row_sum(sum, size):
+#     row = []
+#     for index in range(size):
+#         if index == 0:
+#             row.append('Sum')
+#         elif index == (size - 1):
+#             row.append('<font color="red" >' + str(sum) + '</font>')
+#         else:
+#             row.append('')
+#     return row
 
 
 # def my_all(debt, debt_type, years, sum):
