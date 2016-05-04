@@ -15,10 +15,10 @@
     <hr>
    {% autoescape off %}
     <table>
-        {% for item in all %}
+        {% for row in all %}
             <tr>
-                {% for i in item %}
-                    <td>{{ i }}</td>
+                {% for column in row %}
+                    <td>{{ column }}</td>
                 {% endfor %}
             </tr>
         {% endfor %}

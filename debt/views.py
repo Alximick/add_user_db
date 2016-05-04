@@ -23,11 +23,13 @@ def my_all(debt, debt_type, years, sum):
     for year in years:
         url_year = r'<a href="'+ url.url + str(year) + r'">' +  str(year) + r'</a>'
         row.append(url_year)
+    row.append('Итого')
     all_row.append(row)
 
     for d_type in debt_type:
         row = []
         row.append(d_type)
+        sum_row = 0
         for year in years:
             not_found = True
             for item in debt:
@@ -35,9 +37,11 @@ def my_all(debt, debt_type, years, sum):
                     url_sum_year = r'<a href="' + url.url + str(year) + r'">' \
                                    + str(item['sum_year']) + r'</a>'
                     row.append(url_sum_year)
+                    sum_row += item['sum_year']
                     not_found = False
             if not_found:
                 row.append('')
+        row.append(sum_row)
         all_row.append(row)
 
     all_row.append(row_sum(sum, len(all_row[0])))
@@ -54,13 +58,14 @@ def my_all_filter(debt, debt_type, sum):
         row.append((month, year))
     row = sorted(set(row))
     row.insert(0, '')
+    row.append('Итого')
     all_row.append(row)
 
     for d_type in debt_type:
         row = []
         row.append(d_type)
-
-        for year_month in all_row[0]:
+        sum_row = 0
+        for year_month in all_row[0][:-1]:
             not_found = True
             if not year_month:
                 continue
@@ -69,9 +74,11 @@ def my_all_filter(debt, debt_type, sum):
                         and item.month == year_month[0]\
                         and item.type.name == d_type:
                     row.append(item.amount)
+                    sum_row += item.amount
                     not_found = False
             if not_found:
                 row.append('')
+        row.append(sum_row)
         all_row.append(row)
 
     all_row.append(row_sum(sum, len(all_row[0])))
