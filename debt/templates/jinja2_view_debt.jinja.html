@@ -23,21 +23,20 @@
             <td>Итого</td>
         </tr>
         {% for d_type in debt_type %}
-        <tr>
-            <td> {{ d_type }} </td>
-            {% set sum_year = 0 %}
-            {% for year in years %}
+            <tr>
+                <td> {{ d_type }} </td>
+                {% set res = [] %}
+                {% for year in years %}
 
-                {% if all[(year, d_type)] %}
-                    <td> {{ all[(year, d_type)] }} </td>
-                {% else %}
-                    <td></td>
-                {% endif %}
-
-            {% endfor %}
-            <td> {{ sum_year }} </td>
-
-        </tr>
+                    {% if all[(year, d_type)] %}
+                        <td> {{ all[(year, d_type)] }} </td>
+                        {% set _ = res.append(all[(year, d_type)]) %}
+                    {% else %}
+                        <td></td>
+                    {% endif %}
+                {% endfor %}
+                <td>{{ res|sum() }}</td>
+            </tr>
         {% endfor %}
         <tr>
             <td>Sum</td>
@@ -57,20 +56,19 @@
             <td>Итого</td>
         </tr>
         {% for d_type in debt_type %}
-        <tr>
-            <td> {{ d_type }} </td>
-            {% set sum_year = 0 %}
-            {% for year in years %}
-                {% if all[(year, d_type)] %}
-                    <td> <a href=" {{ url ('mydebt', year)  }}">{{ all[(year, d_type)] }}</a> </td>
-                {% else %}
-                    <td></td>
-                {% endif %}
-
-            {% endfor %}
-            <td> {{ sum_year }} </td>
-
-        </tr>
+            <tr>
+                <td> {{ d_type }} </td>
+                    {% set res = [] %}
+                    {% for year in years %}
+                        {% if all[(year, d_type)] %}
+                            <td> <a href=" {{ url ('mydebt', year)  }}">{{ all[(year, d_type)] }}</a> </td>
+                            {% set _ = res.append(all[(year, d_type)]) %}
+                        {% else %}
+                            <td></td>
+                        {% endif %}
+                    {% endfor %}
+                <td>{{ res|sum() }}</td>
+            </tr>
         {% endfor %}
         <tr>
             <td>Sum</td>

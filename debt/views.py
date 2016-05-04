@@ -18,7 +18,7 @@ def mydebt(request, year=None):
         }
     else:
         debt = Debt.objects.filter(user_id=request.user.id)\
-            .select_related('type').values('year', 'type__slug','type__name')\
+            .select_related('type').values('year', 'type__slug', 'type__name')\
             .annotate(sum_year=Sum('amount'))
         args = {
             'years': sorted({item['year'] for item in debt}),
